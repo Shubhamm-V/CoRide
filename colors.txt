@@ -1,0 +1,4 @@
+color1 - dark: #364F6B
+color2 - pink: #FC5185
+color3 - cyan: #3FC1C9
+color4 - bg-white: #F5F5F5
