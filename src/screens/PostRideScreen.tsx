@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import {firebase} from '../config';
-
+import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
 import InputField from '../components/InputField';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,11 +21,19 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store';
 import RideCard from '../components/RideCard';
 
+const CAMPUSES = [
+  'MIT Engineering Campus',
+  'MIT Polytechnic Campus',
+  'MIT Cidco Campus',
+  'MIT Rotegoan Campus',
+  'Other Address',
+];
+
 const RegisterScreen = ({navigation}: any) => {
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [dorLabel, setdorLabel] = useState('Date of Ride');
+  const [dorLabel, setdorLabel] = useState('Date for Ride');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [vehicle, setVehicle] = useState('Bike');
@@ -34,6 +42,11 @@ const RegisterScreen = ({navigation}: any) => {
   const [phone, setPhone] = useState('');
   const [userRideData, setUserRideData] = useState<any>();
   const [editingRide, setEditingRide] = useState(false);
+  const [timeLabel, setTimeLabel] = useState('Time for Ride');
+  const [timeOpen, setTimeOpen] = useState(false);
+
+  const [fromSelected, setFromSelected] = useState('Other Address');
+  const [toSelected, setToSelected] = useState('Other Address');
 
   const [fromRequired, setFromRequired] = useState(false);
   const [toRequired, setToRequired] = useState(false);
@@ -117,11 +130,11 @@ const RegisterScreen = ({navigation}: any) => {
   const postRide = () => {
     let formShouldSubmit = true;
 
-    if (from.trim().length === 0) {
+    if (from.trim().length === 0 && fromSelected === 'Other Address') {
       formShouldSubmit = false;
       setFromRequired(true);
     }
-    if (to.trim().length === 0) {
+    if (to.trim().length === 0 && toSelected === 'Other Address') {
       formShouldSubmit = false;
       setToRequired(true);
     }
@@ -139,17 +152,22 @@ const RegisterScreen = ({navigation}: any) => {
     if (!formShouldSubmit) {
       return;
     }
-    if (dorLabel === 'Date of Ride') {
+    if (dorLabel === 'Date for Ride') {
       Alert.alert('Date is Required');
+      return;
+    }
+    if (timeLabel === 'Time for Ride') {
+      Alert.alert('Time is Required');
       return;
     }
     const data = {
       name,
       email,
       gender,
-      from,
-      to,
+      from: fromSelected === 'Other Address' ? from : fromSelected,
+      to: toSelected === 'Other Address' ? to : toSelected,
       dorLabel,
+      timeLabel,
       vehicle,
       category,
       amount,
@@ -254,48 +272,119 @@ const RegisterScreen = ({navigation}: any) => {
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{paddingHorizontal: 25, paddingTop: '10%'}}>
-        {/* <Text style={styles.headerStyle}>
-          {editingRide ? 'Edit' : 'Post'} Ride
-        </Text> */}
+        style={{paddingHorizontal: 25, paddingTop: '5%'}}>
         <View>
-          <Text style={{paddingLeft: 2, marginBottom: 7}}>From</Text>
-          <InputField
-            setText={setFrom}
-            value={from}
-            required={fromRequired}
-            setRequired={setFromRequired}
-            label={'Akashwani, Chhat. SambhajiNagar'}
-            icon={
-              <Ionicons
-                name="location"
-                size={20}
-                color="#666"
-                style={{marginRight: 5}}
-              />
-            }
-          />
-        </View>
+          <Text style={{paddingBottom: 2}}>From</Text>
 
-        <View>
-          <Text style={{paddingLeft: 2, marginBottom: 7}}>To</Text>
-          <InputField
-            label={'Akashwani, Chhat. SambhajiNagar'}
-            setText={setTo}
-            value={to}
-            required={toRequired}
-            setRequired={setToRequired}
-            icon={
-              <Ionicons
-                name="location"
-                size={20}
-                color="#666"
-                style={{marginRight: 5}}
-              />
-            }
+          <SelectDropdown
+            data={CAMPUSES}
+            onSelect={(selectedItem, index) => {
+              setFromSelected(selectedItem);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={isOpened => {
+              return (
+                <Ionicons
+                  name={
+                    isOpened ? 'chevron-up-outline' : 'chevron-down-outline'
+                  }
+                  size={20}
+                  color="#666"
+                  style={{marginRight: 5}}
+                />
+              );
+            }}
+            dropdownIconPosition={'right'}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
           />
         </View>
+        {fromSelected == 'Other Address' && (
+          <View style={{marginTop: 20}}>
+            <InputField
+              setText={setFrom}
+              value={from}
+              required={fromRequired}
+              setRequired={setFromRequired}
+              label={'Enter location for your ride'}
+              icon={
+                <Ionicons
+                  name="location"
+                  size={20}
+                  color="#666"
+                  style={{marginRight: 5}}
+                />
+              }
+            />
+          </View>
+        )}
         <View>
+          <Text
+            style={{
+              paddingBottom: 2,
+              marginTop: fromSelected === 'Other Address' ? 0 : 20,
+            }}>
+            To
+          </Text>
+          <SelectDropdown
+            data={CAMPUSES}
+            onSelect={(selectedItem, index) => {
+              setToSelected(selectedItem);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={isOpened => {
+              return (
+                <Ionicons
+                  name={
+                    isOpened ? 'chevron-up-outline' : 'chevron-down-outline'
+                  }
+                  size={20}
+                  color="#666"
+                  style={{marginRight: 5}}
+                />
+              );
+            }}
+            dropdownIconPosition={'right'}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
+          />
+        </View>
+        {toSelected === 'Other Address' && (
+          <View style={{marginTop: 20}}>
+            <InputField
+              label={'Enter destination address'}
+              setText={setTo}
+              value={to}
+              required={toRequired}
+              setRequired={setToRequired}
+              icon={
+                <Ionicons
+                  name="location"
+                  size={20}
+                  color="#666"
+                  style={{marginRight: 5}}
+                />
+              }
+            />
+          </View>
+        )}
+        <View style={{marginTop: toSelected === 'Other Address' ? 0 : 20}}>
           <Text style={{paddingLeft: 2}}>Date</Text>
           <View style={styles.dateStyle}>
             <Ionicons
@@ -307,6 +396,22 @@ const RegisterScreen = ({navigation}: any) => {
             <TouchableOpacity onPress={() => setOpen(true)}>
               <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
                 {dorLabel}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View>
+          <Text style={{paddingLeft: 2}}>Date</Text>
+          <View style={styles.dateStyle}>
+            <Ionicons
+              name="time-outline"
+              size={20}
+              color="#666"
+              style={{marginRight: 5}}
+            />
+            <TouchableOpacity onPress={() => setTimeOpen(true)}>
+              <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
+                {timeLabel}
               </Text>
             </TouchableOpacity>
           </View>
@@ -325,6 +430,19 @@ const RegisterScreen = ({navigation}: any) => {
           }}
           onCancel={() => {
             setOpen(false);
+          }}
+        />
+        <DatePicker
+          modal
+          open={timeOpen}
+          date={date}
+          mode={'time'}
+          onConfirm={selectedTime => {
+            setTimeOpen(false);
+            setTimeLabel(selectedTime.toLocaleTimeString());
+          }}
+          onCancel={() => {
+            setTimeOpen(false);
           }}
         />
         <View
@@ -481,6 +599,22 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
   },
+
+  dropdown1BtnStyle: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  dropdown1BtnTxtStyle: {color: '#444', textAlign: 'left'},
+  dropdown1DropdownStyle: {backgroundColor: '#f5f5f5'},
+  dropdown1RowStyle: {
+    backgroundColor: '#f5f5f5',
+    borderBottomColor: '#C5C5C5',
+  },
+  dropdown1RowTxtStyle: {color: '#364F6B', textAlign: 'left'},
 });
 
 {
