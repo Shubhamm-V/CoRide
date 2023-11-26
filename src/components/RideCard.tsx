@@ -8,6 +8,7 @@ const RideCard = (props: any) => {
     name,
     email,
     from,
+    timeLabel,
     to,
     gender,
     vehicle,
@@ -67,6 +68,13 @@ const RideCard = (props: any) => {
         <Text style={{fontSize: 15, color: '#364F6B'}}>Date for Ride</Text>
         <Text style={{fontSize: 15, color: '#364F6B', fontWeight: 'bold'}}>
           {dorLabel}
+        </Text>
+      </View>
+      <Divider />
+      <View style={styles.contactHeader}>
+        <Text style={{fontSize: 15, color: '#364F6B'}}>Time for Ride</Text>
+        <Text style={{fontSize: 15, color: '#364F6B', fontWeight: 'bold'}}>
+          {timeLabel}
         </Text>
       </View>
       <Divider />

@@ -13,6 +13,7 @@ type RideInfo = {
   amount: string;
   category: string;
   dorLabel: string;
+  timeLabel: string;
   email: string;
   to: string;
   vehicle: string;
