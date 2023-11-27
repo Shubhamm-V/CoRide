@@ -24,7 +24,7 @@ const InputField = ({
           placeholder={label}
           keyboardType={keyboardType}
           onChangeText={setInputValue}
-          placeholderTextColor="#364F6B"
+          placeholderTextColor="#ccc"
           style={{flex: 1, paddingVertical: 0}}
           secureTextEntry={true}
         />
@@ -32,7 +32,7 @@ const InputField = ({
         <TextInput
           placeholder={label}
           onChangeText={setInputValue}
-          placeholderTextColor="#364F6B"
+          placeholderTextColor="#ccc"
           keyboardType={keyboardType}
           style={{flex: 1, paddingVertical: 0}}
         />

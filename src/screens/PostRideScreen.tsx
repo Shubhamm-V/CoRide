@@ -45,8 +45,8 @@ const RegisterScreen = ({navigation}: any) => {
   const [timeLabel, setTimeLabel] = useState('Time for Ride');
   const [timeOpen, setTimeOpen] = useState(false);
 
-  const [fromSelected, setFromSelected] = useState('Other Address');
-  const [toSelected, setToSelected] = useState('Other Address');
+  const [fromSelected, setFromSelected] = useState('MIT Engineering Campus');
+  const [toSelected, setToSelected] = useState('MIT Engineering Campus');
 
   const [fromRequired, setFromRequired] = useState(false);
   const [toRequired, setToRequired] = useState(false);
@@ -82,6 +82,11 @@ const RegisterScreen = ({navigation}: any) => {
       });
   }, []);
 
+  function validatePhoneNumber(input_str: string) {
+    var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+
+    return re.test(input_str);
+  }
   const onSelectVehicle = (value: number) => {
     if (value == 1) setVehicle('Bike');
     else setVehicle('Scooty');
@@ -152,6 +157,10 @@ const RegisterScreen = ({navigation}: any) => {
     if (!formShouldSubmit) {
       return;
     }
+    if (dorLabel === 'Date for Ride' && timeLabel === 'Time for Ride') {
+      Alert.alert('Date and Time is Required');
+      return;
+    }
     if (dorLabel === 'Date for Ride') {
       Alert.alert('Date is Required');
       return;
@@ -160,6 +169,15 @@ const RegisterScreen = ({navigation}: any) => {
       Alert.alert('Time is Required');
       return;
     }
+    if (from.toLowerCase() == to.toLowerCase()) {
+      Alert.alert('From and To address cannot be same');
+      return;
+    }
+    if (!validatePhoneNumber(phone)) {
+      Alert.alert('Please enter valid mobile number');
+      return;
+    }
+
     const data = {
       name,
       email,
@@ -278,6 +296,7 @@ const RegisterScreen = ({navigation}: any) => {
 
           <SelectDropdown
             data={CAMPUSES}
+            defaultButtonText="MIT Engineering Campus"
             onSelect={(selectedItem, index) => {
               setFromSelected(selectedItem);
             }}
@@ -336,6 +355,7 @@ const RegisterScreen = ({navigation}: any) => {
           </Text>
           <SelectDropdown
             data={CAMPUSES}
+            defaultButtonText="MIT Engineering Campus"
             onSelect={(selectedItem, index) => {
               setToSelected(selectedItem);
             }}
@@ -391,26 +411,36 @@ const RegisterScreen = ({navigation}: any) => {
               name="calendar-outline"
               size={20}
               color="#666"
-              style={{marginRight: 5}}
+              style={{marginRight: 5, marginTop: 3}}
             />
             <TouchableOpacity onPress={() => setOpen(true)}>
-              <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
+              <Text
+                style={{
+                  color: dorLabel === 'Date for Ride' ? '#ccc' : '#666',
+                  marginLeft: 5,
+                  marginTop: 5,
+                }}>
                 {dorLabel}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
         <View>
-          <Text style={{paddingLeft: 2}}>Date</Text>
+          <Text style={{paddingLeft: 2}}>Time</Text>
           <View style={styles.dateStyle}>
             <Ionicons
               name="time-outline"
               size={20}
               color="#666"
-              style={{marginRight: 5}}
+              style={{marginRight: 5, marginTop: 3}}
             />
             <TouchableOpacity onPress={() => setTimeOpen(true)}>
-              <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
+              <Text
+                style={{
+                  color: timeLabel === 'Time for Ride' ? '#ccc' : '#666',
+                  marginLeft: 5,
+                  marginTop: 5,
+                }}>
                 {timeLabel}
               </Text>
             </TouchableOpacity>
@@ -439,7 +469,11 @@ const RegisterScreen = ({navigation}: any) => {
           mode={'time'}
           onConfirm={selectedTime => {
             setTimeOpen(false);
-            setTimeLabel(selectedTime.toLocaleTimeString());
+            setTimeLabel(
+              selectedTime.toLocaleTimeString().slice(0, 5) +
+                ' ' +
+                selectedTime.toLocaleTimeString().slice(9),
+            );
           }}
           onCancel={() => {
             setTimeOpen(false);
@@ -607,6 +641,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
+    fontSize: 10,
   },
   dropdown1BtnTxtStyle: {color: '#444', textAlign: 'left'},
   dropdown1DropdownStyle: {backgroundColor: '#f5f5f5'},
