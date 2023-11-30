@@ -171,6 +171,8 @@ const RegisterScreen = ({navigation}: any) => {
     }
     if (from.toLowerCase() == to.toLowerCase()) {
       Alert.alert('From and To address cannot be same');
+      // console.log(from);
+      // console.log(to);
       return;
     }
     if (!validatePhoneNumber(phone)) {
@@ -292,12 +294,13 @@ const RegisterScreen = ({navigation}: any) => {
         showsVerticalScrollIndicator={false}
         style={{paddingHorizontal: 25, paddingTop: '5%'}}>
         <View>
-          <Text style={{paddingBottom: 2}}>From</Text>
+          <Text style={{paddingBottom: 2, color: '#666'}}>From</Text>
 
           <SelectDropdown
             data={CAMPUSES}
             defaultButtonText="MIT Engineering Campus"
             onSelect={(selectedItem, index) => {
+              setFrom(selectedItem);
               setFromSelected(selectedItem);
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
@@ -349,6 +352,7 @@ const RegisterScreen = ({navigation}: any) => {
           <Text
             style={{
               paddingBottom: 2,
+              color: '#666',
               marginTop: fromSelected === 'Other Address' ? 0 : 20,
             }}>
             To
@@ -357,6 +361,7 @@ const RegisterScreen = ({navigation}: any) => {
             data={CAMPUSES}
             defaultButtonText="MIT Engineering Campus"
             onSelect={(selectedItem, index) => {
+              setTo(selectedItem);
               setToSelected(selectedItem);
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
@@ -405,7 +410,7 @@ const RegisterScreen = ({navigation}: any) => {
           </View>
         )}
         <View style={{marginTop: toSelected === 'Other Address' ? 0 : 20}}>
-          <Text style={{paddingLeft: 2}}>Date</Text>
+          <Text style={{paddingLeft: 2, color: '#666'}}>Date</Text>
           <View style={styles.dateStyle}>
             <Ionicons
               name="calendar-outline"
@@ -426,7 +431,7 @@ const RegisterScreen = ({navigation}: any) => {
           </View>
         </View>
         <View>
-          <Text style={{paddingLeft: 2}}>Time</Text>
+          <Text style={{paddingLeft: 2, color: '#666'}}>Time</Text>
           <View style={styles.dateStyle}>
             <Ionicons
               name="time-outline"
@@ -472,7 +477,7 @@ const RegisterScreen = ({navigation}: any) => {
             setTimeLabel(
               selectedTime.toLocaleTimeString().slice(0, 5) +
                 ' ' +
-                selectedTime.toLocaleTimeString().slice(9),
+                selectedTime.toLocaleTimeString().slice(9).toUpperCase(),
             );
           }}
           onCancel={() => {
@@ -510,7 +515,9 @@ const RegisterScreen = ({navigation}: any) => {
 
         {category === 'Paid' && (
           <View>
-            <Text style={{paddingLeft: 2, marginBottom: 7}}>Price</Text>
+            <Text style={{paddingLeft: 2, marginBottom: 7, color: '#666'}}>
+              Price
+            </Text>
             <InputField
               label={'10'}
               setText={setAmount}
@@ -531,7 +538,9 @@ const RegisterScreen = ({navigation}: any) => {
         )}
 
         <View>
-          <Text style={{paddingLeft: 2, marginBottom: 7}}>Phone</Text>
+          <Text style={{paddingLeft: 2, marginBottom: 7, color: '#666'}}>
+            Phone
+          </Text>
           <InputField
             label={'+91 9999999999'}
             setText={setPhone}

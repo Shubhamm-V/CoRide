@@ -25,7 +25,7 @@ const InputField = ({
           keyboardType={keyboardType}
           onChangeText={setInputValue}
           placeholderTextColor="#ccc"
-          style={{flex: 1, paddingVertical: 0}}
+          style={{flex: 1, paddingVertical: 0, color: '#364F6B'}}
           secureTextEntry={true}
         />
       ) : (
@@ -34,7 +34,7 @@ const InputField = ({
           onChangeText={setInputValue}
           placeholderTextColor="#ccc"
           keyboardType={keyboardType}
-          style={{flex: 1, paddingVertical: 0}}
+          style={{flex: 1, paddingVertical: 0, color: '#364F6B'}}
         />
       )}
       {required && value.length == 0 && (
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 8,
     marginBottom: 25,
+    color: 'red',
   },
 });
 

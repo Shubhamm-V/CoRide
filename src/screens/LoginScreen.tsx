@@ -121,7 +121,7 @@ const LoginScreen = ({navigation}: any) => {
             justifyContent: 'center',
             marginBottom: 30,
           }}>
-          <Text>New to the app?</Text>
+          <Text style={{color: '#666'}}>New to the app?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
             <Text style={{color: '#364F6B', fontWeight: '700'}}> SignUp</Text>
           </TouchableOpacity>
