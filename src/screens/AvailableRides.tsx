@@ -58,8 +58,9 @@ const AvailableRides = () => {
   const filterResults = (value: string) => {
     value = value.toLowerCase();
     const data = tempRideData.filter(item => {
-      item.from = item.from.toLowerCase();
-      return item.from.includes(value);
+      const fromLocation = item.from.toLowerCase();
+      const toLocation = item.to.toLowerCase();
+      return fromLocation.includes(value) || toLocation.includes(value);
     });
     setRidesData(data);
   };
